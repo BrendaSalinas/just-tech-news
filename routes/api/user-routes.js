@@ -58,6 +58,29 @@ router.post('/', (req, res) => {
     });
 });
 
+//this is a login route, it will allow the user to login 
+router.post('/login', (req, res) => {
+    //Query operation expects {email: 'lerantino@gmail.com', password: 'password1234'}
+    User.findOne({
+        where: {
+            email: req.body.email
+        }
+    })
+    .then(dbUserData => {
+        if(!dbUserData) {
+            res.status(400).json({ message: 'No user with that e-mail address found!'});
+            return;
+        }
+        const validPassword = dbUserData.checkPassword(req.body.password);
+        if(!validPassword) {
+            res.status(400).json({ message: 'Incorrect Password!' });
+            return;
+        }
+
+        res.json({ user: dbUserData, message: "You're now Logged In! "})
+         //res.json({ user: dbUserData});
+    });
+});
 //PUT /api/users/1
 router.put('/:id', (req, res) => {
  // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
