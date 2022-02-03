@@ -4,7 +4,10 @@ const { User } = require('../../models');
 //GET /api/users - this is to get all users 
 router.get('/', (req, res) => {
     //Access our User model and run .findAll() method) equivalent to SELECT * FROM users;
-    User.findAll()
+    User.findAll({
+        //This will hide the password
+        attributes: { exclude: ['password'] }
+    })
     .then(dbUserData => res.json(dbUserData))
     .catch(err => {
         console.log(err);
@@ -17,6 +20,8 @@ router.get('/:id', (req, res) => {
 
     // findOne we're using the where option to indicate we want to find a user where its id value equals whatever req.params.id. equivalent to: SELECT * FROM users WHERE id = 1
     User.findOne({
+        //This will hide the password
+        attributes: { exclude: ['password'] },
         where: {
             id: req.params.id
         }
@@ -62,6 +67,7 @@ router.put('/:id', (req, res) => {
     //SET username = "Lernantino", email = "lernantino@gmail.com", password = "newPassword1234"
     //WHERE id = 1;
   User.update(req.body, {
+      individualHooks: true,
       where: {
           id: req.params.id
       }
@@ -79,6 +85,8 @@ router.put('/:id', (req, res) => {
   });
     
 });
+
+
 
 //DELETE /api/users/1
 router.delete('/:id', (req, res) => {
