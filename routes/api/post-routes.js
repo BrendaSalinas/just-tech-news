@@ -50,6 +50,23 @@ router.get('/:id', (req, res) => {
     });
 });
 
+router.post('/', (req, res) => {
+    //expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}. equivalent to: 
+    // INSERT INTO users
+    // (username, email, password)
+    // VALUES
+    // ("Lernantino", "lernantino@gmail.com", "password1234");
+    Post.create({
+        title: req.body.title,
+        post_url: req.body.post_url,
+        user_id: req.body.user_id
+    })
+    .then(dbPostData => res.json(dbPostData))
+    .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+    });
+});
 
 
 module.exports = router;
