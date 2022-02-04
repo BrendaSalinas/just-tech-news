@@ -68,6 +68,36 @@ router.post('/', (req, res) => {
     });
 });
 
-
+router.put('/:id', (req, res) => {
+    // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
+   
+     // if req.body has exact key/value pairs to match the model, you can just use `req.body` instead
+       //UPDATE users
+       //SET username = "Lernantino", email = "lernantino@gmail.com", password = "newPassword1234"
+       //WHERE id = 1;
+     Post.update(
+         {
+            title: req.body.title
+         },
+         {
+            where: {
+                id: req.params.id
+            }
+        }
+     )
+     .then(dbPostData => {
+         if (!dbPostData) {
+             res.status(404).json ({ message: "No post found with this id"})
+             return;
+         }
+         res.json(dbPostData);
+     })
+     .catch(err => {
+         console.log(err);
+         res.status(500).json(err);
+     });
+       
+   });
+   
 module.exports = router;
 
